@@ -71,7 +71,7 @@ def dt_main(seed,run):
     (training_data, test_data) = kdd_vec.randomSplit([0.7, 0.3],seed=seed)
 #     trainingData.show()
 #     testData.show()
-    print(run)
+    print(run ," - seed =", seed)
     start_time = time.time()
     dt = DecisionTreeClassifier(labelCol="indexed_lab", featuresCol="features")
     dtModel = dt.fit(training_data)
