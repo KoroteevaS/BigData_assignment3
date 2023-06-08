@@ -1,38 +1,43 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[41]:
+# In[30]:
 
 
-from pyspark.sql.functions import split, when
-print("here")
+# from pyspark.sql.functions import split
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.sql.functions import split
 from pyspark.ml.feature import StringIndexer
-from pyspark.ml import Pipeline
-import pandas as pd
+# from pyspark.ml import Pipeline
+# import pandas as pd
 from pyspark.sql.functions import col
+import time
+import numpy as np
 
 spark = SparkSession.builder.appName("DecisionTree").getOrCreate()
-print("here1")
 kdd = spark.read.csv("data/kdd.data")
 print(kdd)
 print(kdd.show())
 
 
 
-# In[85]:
+# In[31]:
 
 
-first_value = dataset.select(dataset.columns[0]).first()[0]
-print(first_value)
+# Set the number of runs
+seeds = [123,1234,777,888,1000,9876545,123456,3333,88,1000]
+
+# Initialize lists to store accuracy results
+train_accuracies = []
+test_accuracies = []
+run = 1
 
 
 
-# In[44]:
+# In[28]:
 
 
 feature_columns = kdd.columns[:-1]  # Select all columns except the last one
@@ -40,7 +45,7 @@ label_column = kdd.columns[-1]
 
 
 # Create a StringIndexer to encode the label column
-label_indexer = StringIndexer(inputCol=label_column, outputCol="indexedLabel")
+label_indexer = StringIndexer(inputCol=label_column, outputCol="indexed_lab")
 data = label_indexer.fit(kdd).transform(kdd)
 
 
@@ -57,35 +62,67 @@ for column in columns_to_convert:
 assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
 kdd_vec = assembler.transform(data)
 kdd_vec.select("features").show(truncate=False)
-(trainingData, testData) = kdd_vec.randomSplit([0.7, 0.3])
-trainingData.show()
-testData.show()
 
 
-# In[46]:
+# In[33]:
 
 
-dt = DecisionTreeClassifier(labelCol="indexedLabel", featuresCol="features")
-dtModel = dt.fit(trainingData)
-# # Train the Decision Tree model
-# dt = DecisionTreeClassifier(labelCol="labelIndex", featuresCol="features_vector")
-# dtModel = dt.fit(trainingData)
+def dt_main(seed,run):
+    (training_data, test_data) = kdd_vec.randomSplit([0.7, 0.3],seed=seed)
+#     trainingData.show()
+#     testData.show()
+    print(run)
+    start_time = time.time()
+    dt = DecisionTreeClassifier(labelCol="indexed_lab", featuresCol="features")
+    dtModel = dt.fit(training_data)
 
-# Make predictions on the test set
-predictions = dtModel.transform(testData)
+    train_pred = dtModel.transform(training_data)
+    test_pred = dtModel.transform(test_data)
 
 
 
-# Evaluate the model
-evaluator = MulticlassClassificationEvaluator(
-    labelCol="indexedLabel", predictionCol="prediction", metricName="accuracy"
-)
-accuracy = evaluator.evaluate(predictions)
+    # Evaluation
+    evaluator = MulticlassClassificationEvaluator(
+        labelCol="indexed_lab", predictionCol="prediction", metricName="accuracy"
+    )
+    train_accuracy = evaluator.evaluate(train_pred)
+    test_accuracy =  evaluator.evaluate(test_pred)
 
-# Print the accuracy
-print("Decision Tree Accuracy:", accuracy)
+    print("Training Accuracy:", train_accuracy)
+    print("Test Accuracy:", test_accuracy)
 
-# Clean up resources
+    train_accuracies.append(train_accuracy)
+    test_accuracies.append(test_accuracy)
+
+    running_time = time.time() - start_time
+    print("Running Time:", running_time, "seconds")
+    run = run+1
+    return run
+
+
+
+ 
+
+
+# In[ ]:
+
+
+for seed in seeds:
+    
+    run = dt_main(seed, run)
+print("Training Accuracy - Max:", np.max(train_accuracies))
+print("Training Accuracy - Min:", np.min(train_accuracies))
+print("Training Accuracy - Average:", np.mean(train_accuracies))
+print("Training Accuracy - Standard Deviation:", np.std(train_accuracies))
+print("Test Accuracy - Max:", np.max(test_accuracies))
+print("Test Accuracy - Min:", np.min(test_accuracies))
+print("Test Accuracy - Average:", np.mean(test_accuracies))
+print("Test Accuracy - Standard Deviation:", np.std(test_accuracies))
+
+
+# In[ ]:
+
+
 spark.stop()
 
 
