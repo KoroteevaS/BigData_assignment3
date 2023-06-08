@@ -3,16 +3,12 @@
 
 # In[30]:
 
-
-# from pyspark.sql.functions import split
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler
 from pyspark.ml.classification import DecisionTreeClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.sql.functions import split
 from pyspark.ml.feature import StringIndexer
-# from pyspark.ml import Pipeline
-# import pandas as pd
 from pyspark.sql.functions import col
 import time
 import numpy as np
