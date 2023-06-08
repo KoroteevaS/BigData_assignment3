@@ -64,7 +64,14 @@ kdd_vec.select("features").show(truncate=False)
 # In[4]:
 
 
-def dt_main(seed,run):
+def lr_main(seed,run):
+    """This function splits prepared data for training and test based on given seed, fits test data to LogisticRegression model, make predictions on test data, evaluate both
+  training and test accuracies and collect them to lists. Prints single run stats.
+  Parameters:
+    seed(str) - splitting seed from list
+    run(int) - count increasing after each run
+  Return:
+    run(int) -count"""
     (training_data, test_data) = kdd_vec.randomSplit([0.7, 0.3],seed=seed)
 #     trainingData.show()
 #     testData.show()
@@ -106,7 +113,7 @@ def dt_main(seed,run):
 
 for seed in seeds:
     
-    run = dt_main(seed, run)
+    run = lr_main(seed, run)
 print("Training Accuracy - Max:", np.max(train_accuracies))
 print("Training Accuracy - Min:", np.min(train_accuracies))
 print("Training Accuracy - Average:", np.mean(train_accuracies))
