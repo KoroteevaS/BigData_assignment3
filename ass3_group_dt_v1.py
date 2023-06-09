@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[30]:
 
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler
@@ -19,10 +18,6 @@ print(kdd)
 print(kdd.show())
 
 
-
-# In[31]:
-
-
 # Set the number of runs
 seeds = [123,1234,777,888,1000,9876545,123456,3333,88,1000]
 
@@ -33,14 +28,10 @@ run = 1
 
 
 
-# In[28]:
-
-
 feature_columns = kdd.columns[:-1]  # Select all columns except the last one
 label_column = kdd.columns[-1] 
 
 
-# Create a StringIndexer to encode the label column
 label_indexer = StringIndexer(inputCol=label_column, outputCol="indexed_lab")
 data = label_indexer.fit(kdd).transform(kdd)
 
@@ -58,9 +49,6 @@ for column in columns_to_convert:
 assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
 kdd_vec = assembler.transform(data)
 kdd_vec.select("features").show(truncate=False)
-
-
-# In[33]:
 
 
 def dt_main(seed,run):
@@ -104,13 +92,6 @@ def dt_main(seed,run):
     return run
 
 
-
- 
-
-
-# In[ ]:
-
-
 for seed in seeds:
     
     run = dt_main(seed, run)
@@ -124,13 +105,8 @@ print("Test Accuracy - Average:", np.mean(test_accuracies))
 print("Test Accuracy - Standard Deviation:", np.std(test_accuracies))
 
 
-# In[ ]:
-
-
 spark.stop()
 
-
-# In[ ]:
 
 
 
