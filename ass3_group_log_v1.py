@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
-
 
 from pyspark.sql import SparkSession
 from pyspark.ml.feature import VectorAssembler
@@ -21,9 +19,6 @@ print(kdd.show())
 
 
 
-# In[2]:
-
-
 # Set the number of runs
 seeds = [123,1234,777,888,1000,9876545,123456,3333,88,1000]
 
@@ -32,9 +27,6 @@ train_accuracies = []
 test_accuracies = []
 run = 1
 
-
-
-# In[3]:
 
 
 feature_columns = kdd.columns[:-1]  # Select all columns except the last one
@@ -59,9 +51,6 @@ for column in columns_to_convert:
 assembler = VectorAssembler(inputCols=feature_columns, outputCol="features")
 kdd_vec = assembler.transform(data)
 kdd_vec.select("features").show(truncate=False)
-
-
-# In[4]:
 
 
 def lr_main(seed,run):
@@ -106,11 +95,6 @@ def lr_main(seed,run):
 
 
  
-
-
-# In[5]:
-
-
 for seed in seeds:
     
     run = lr_main(seed, run)
@@ -124,13 +108,11 @@ print("Test Accuracy - Average:", np.mean(test_accuracies))
 print("Test Accuracy - Standard Deviation:", np.std(test_accuracies))
 
 
-# In[35]:
 
 
 spark.stop()
 
 
-# In[ ]:
 
 
 
