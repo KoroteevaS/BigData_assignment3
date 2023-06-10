@@ -52,7 +52,7 @@ kdd_vec.select("features").show(truncate=False)
 
 
 def dt_main(seed,run):
-  """This function splits prepared data for training and test based on given seed, fits test data to DecisionTreeClassifier model, make predictions on test data, evaluate both
+    """This function splits prepared data for training and test based on given seed, fits test data to DecisionTreeClassifier model, make predictions on test data, evaluate both
   training and test accuracies and collect them to lists. Prints single run stats.
   Parameters:
     seed(str) - splitting seed from list
