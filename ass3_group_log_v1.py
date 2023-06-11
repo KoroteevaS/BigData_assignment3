@@ -11,6 +11,7 @@ from pyspark.ml.feature import StringIndexer
 from pyspark.sql.functions import col
 import time
 import numpy as np
+import pandas as pd
 
 spark = SparkSession.builder.appName("DecisionTree").getOrCreate()
 kdd = spark.read.csv("data/kdd.data")
@@ -53,7 +54,7 @@ kdd_vec = assembler.transform(data)
 kdd_vec.select("features").show(truncate=False)
 
 
-def lr_main(seed,run):
+def lr_main(seed,run, results):
     """This function splits prepared data for training and test based on given seed, fits test data to LogisticRegression model, make predictions on test data, evaluate both
   training and test accuracies and collect them to lists. Prints single run stats.
   Parameters:
@@ -89,15 +90,24 @@ def lr_main(seed,run):
 
     running_time = time.time() - start_time
     print("Running Time:", running_time, "seconds")
+    results.append([i+1, seeds[i], "Train", train_accuracy, running_time])
+    results.append([i+1, seeds[i], "Test", test_accuracy, running_time])
     run = run+1
-    return run
+    return run, results
 
 
+results = []
+for i,seed in enumerate(seeds):
+    run, results = lr_main(seed, run, results)
 
- 
-for seed in seeds:
-    
-    run = lr_main(seed, run)
+header = ["Run", "Seed", "Train/Test", "Accuracy", "Running Time"]
+# results_df = spark.createDataFrame(results, schema=header)
+# res_data = results_df.collect()
+pandas_df = pd.DataFrame(results)
+pandas_df.columns = header
+pandas_df.to_csv("log_reg_running_stat.csv")
+
+
 print("Training Accuracy - Max:", np.max(train_accuracies))
 print("Training Accuracy - Min:", np.min(train_accuracies))
 print("Training Accuracy - Average:", np.mean(train_accuracies))
@@ -107,9 +117,17 @@ print("Test Accuracy - Min:", np.min(test_accuracies))
 print("Test Accuracy - Average:", np.mean(test_accuracies))
 print("Test Accuracy - Standard Deviation:", np.std(test_accuracies))
 
-
-
-
+final_stats_data = [
+    [np.max(train_accuracies), np.min(train_accuracies), np.mean(train_accuracies), np.std(train_accuracies)],
+    [np.max(test_accuracies), np.min(test_accuracies), np.mean(test_accuracies), np.std(test_accuracies)]
+]
+print(final_stats_data)
+header = ["Max", "Min", "Average", "Standard Deviation"]
+# final_stats_df = spark.createDataFrame(final_stats_data, schema =header)
+# final_data = final_stats_df.collect()
+pandas_fin_df = pd.DataFrame(final_stats_data)
+pandas_fin_df.columns = header
+pandas_fin_df.to_csv("log_reg_stats.csv")
 spark.stop()
 
 
