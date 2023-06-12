@@ -12,7 +12,7 @@ from pyspark.sql.functions import col
 import time
 import numpy as np
 import pandas as pd
-
+pr_start_time = time.time()
 spark = SparkSession.builder.appName("DecisionTree").getOrCreate()
 kdd = spark.read.csv("data/kdd.data")
 print(kdd)
@@ -118,15 +118,15 @@ print("Test Accuracy - Max:", np.max(test_accuracies))
 print("Test Accuracy - Min:", np.min(test_accuracies))
 print("Test Accuracy - Average:", np.mean(test_accuracies))
 print("Test Accuracy - Standard Deviation:", np.std(test_accuracies))
-
+running_time = time.time() - pr_start_time
 final_stats_data = [
-    [np.max(train_accuracies).item(), np.min(train_accuracies).item(), np.mean(train_accuracies).item(), np.std(train_accuracies).item()],
-    [np.max(test_accuracies).item(), np.min(test_accuracies).item(), np.mean(test_accuracies).item(), np.std(test_accuracies).item()]
+    [np.max(train_accuracies).item(), np.min(train_accuracies).item(), np.mean(train_accuracies).item(), np.std(train_accuracies).item(), running_time],
+    [np.max(test_accuracies).item(), np.min(test_accuracies).item(), np.mean(test_accuracies).item(), np.std(test_accuracies).item(), running_time]
 ]
 
 print(final_stats_data)
 
-header = ["Max", "Min", "Average", "Standard Deviation"]
+header = ["Max", "Min", "Average", "Standard Deviation", "OverallTime"]
 
 # Create SparkSession
 spark = SparkSession.builder.getOrCreate()
@@ -144,7 +144,6 @@ except Exception as e:
 
 
 spark.stop()
-
 
 
 
