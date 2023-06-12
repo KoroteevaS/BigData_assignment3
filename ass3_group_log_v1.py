@@ -120,16 +120,29 @@ print("Test Accuracy - Average:", np.mean(test_accuracies))
 print("Test Accuracy - Standard Deviation:", np.std(test_accuracies))
 
 final_stats_data = [
-    [np.max(train_accuracies), np.min(train_accuracies), np.mean(train_accuracies), np.std(train_accuracies)],
-    [np.max(test_accuracies), np.min(test_accuracies), np.mean(test_accuracies), np.std(test_accuracies)]
+    [np.max(train_accuracies).item(), np.min(train_accuracies).item(), np.mean(train_accuracies).item(), np.std(train_accuracies).item()],
+    [np.max(test_accuracies).item(), np.min(test_accuracies).item(), np.mean(test_accuracies).item(), np.std(test_accuracies).item()]
 ]
+
 print(final_stats_data)
+
 header = ["Max", "Min", "Average", "Standard Deviation"]
-results_spark_df = spark.createDataFrame(final_stats_data)
+
+# Create SparkSession
+spark = SparkSession.builder.getOrCreate()
+
+# Convert numpy.float64 to float
+final_stats_data = [[float(value) if isinstance(value, np.float64) else value for value in row] for row in final_stats_data]
+
+# Create DataFrame
+results_spark_df = spark.createDataFrame(final_stats_data, header)
+
 try:
-    results_spark_df.coalesce(1).write.csv(r"/user/korotesvet/lr_output_fin.csv", header=True)
+    results_spark_df.coalesce(1).write.csv("/user/korotesvet/lr_output_fin.csv", header=True)
 except Exception as e:
     print(str(e))
+
+
 spark.stop()
 
 
