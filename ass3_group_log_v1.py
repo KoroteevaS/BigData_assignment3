@@ -104,7 +104,7 @@ header = ["Run", "Seed", "Train/Test", "Accuracy", "Running Time"]
 results_df = pd.DataFrame(results, columns=header) 
 results_spark_df = spark.createDataFrame(results_df)
 try:
-    results_spark_df.coalesce(1).write.csv(r"/user/korotesvet/lr_output.csv", header=True)
+    results_spark_df.coalesce(1).write.mode("overwrite").csv("/user/korotesvet/lr_output_fin.csv", header=True)
 except Exception as e:
     print(str(e))
 
@@ -138,7 +138,7 @@ final_stats_data = [[float(value) if isinstance(value, np.float64) else value fo
 results_spark_df = spark.createDataFrame(final_stats_data, header)
 
 try:
-    results_spark_df.coalesce(1).write.csv("/user/korotesvet/lr_output_fin.csv", header=True)
+    results_spark_df.coalesce(1).write.mode("overwrite").csv("/user/korotesvet/lr_output_fin.csv", header=True)
 except Exception as e:
     print(str(e))
 
