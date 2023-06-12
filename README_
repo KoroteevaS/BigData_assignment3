@@ -7,7 +7,7 @@ First part: Instruction to install Spark cluster on local machine :
  2-Then, download Apache Spark as zip. 
    https://spark.apache.org/downloads.html
 
- 3- Now, unzip downloaded file and copy the underlying 
+ 3- Next, unzip downloaded file and copy the underlying 
   folder ( spark-3.0.0-bin-hadoop2.7 ) into local program folder.
 
  4- Now, set the environment variable in local machine, as below: 
@@ -41,7 +41,7 @@ Second Part: Instructions for server cluster:
 	export HADOOP_VERSION=2.8.0
 	export HADOOP_PREFIX=/local/Hadoop/hadoop-$HADOOP_VERSION
 	PATH=${PATH}:$HADOOP_PREFIX/bin
-	export SPARK_HOME=/home/korotesvet/spark-3.2.3-bin-hadoop2.7
+	export SPARK_HOME=/home/username/spark-3.2.3-bin-hadoop2.7
 	PATH=$SPARK_HOME/bin:$PATH
 	export HADOOP_CONF_DIR=$HADOOP_PREFIX/etc/hadoop
 	export YARN_CONF_DIR=$HADOOP_PREFIX/etc/hadoop
@@ -51,4 +51,4 @@ Second Part: Instructions for server cluster:
  4- Install pyspark: python -m pip install pyspark==3.2.3 (your package version)
  5- Run command: source setup.csh
  6- Put “kdd.data” dataset to hadoop cluster space: hdfs dfs -put kdd.data /user/username/
- 7- Run python file: “spark-submit –master yarn –deploy-mode cluster 
+ 7- Run python file: “spark-submit –master yarn -–deploy-mode cluster script.py
