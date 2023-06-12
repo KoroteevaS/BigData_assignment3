@@ -11,7 +11,7 @@ from pyspark.ml.feature import StringIndexer
 from pyspark.sql.functions import col
 import time
 import numpy as np
-
+pr_start_time = time.time()
 spark = SparkSession.builder.appName("DecisionTree").getOrCreate()
 kdd = spark.read.csv("data/kdd.data")
 print(kdd)
@@ -51,7 +51,7 @@ kdd_vec = assembler.transform(data)
 kdd_vec.select("features").show(truncate=False)
 
 
-def dt_main(seed,run):
+def dt_main(seed,run, results):
     """This function splits prepared data for training and test based on given seed, fits test data to DecisionTreeClassifier model, make predictions on test data, evaluate both
   training and test accuracies and collect them to lists. Prints single run stats.
   Parameters:
@@ -89,12 +89,20 @@ def dt_main(seed,run):
     running_time = time.time() - start_time
     print("Running Time:", running_time, "seconds")
     run = run+1
-    return run
+    return run, results
 
+results = []
+for i,seed in enumerate(seeds):
+    run, results = dt_main(seed, run, results)
 
-for seed in seeds:
-    
-    run = dt_main(seed, run)
+header = ["Run", "Seed", "Train/Test", "Accuracy", "Running Time"]
+results_df = pd.DataFrame(results, columns=header) 
+results_spark_df = spark.createDataFrame(results_df)
+try:
+    results_spark_df.coalesce(1).write.mode("overwrite").csv("/user/korotesvet/dt_output.csv", header=True)
+except Exception as e:
+    print(str(e))
+
 print("Training Accuracy - Max:", np.max(train_accuracies))
 print("Training Accuracy - Min:", np.min(train_accuracies))
 print("Training Accuracy - Average:", np.mean(train_accuracies))
@@ -103,6 +111,23 @@ print("Test Accuracy - Max:", np.max(test_accuracies))
 print("Test Accuracy - Min:", np.min(test_accuracies))
 print("Test Accuracy - Average:", np.mean(test_accuracies))
 print("Test Accuracy - Standard Deviation:", np.std(test_accuracies))
+running_time = time.time() - pr_start_time
+final_stats_data = [
+    [np.max(train_accuracies).item(), np.min(train_accuracies).item(), np.mean(train_accuracies).item(), np.std(train_accuracies).item(), running_time],
+    [np.max(test_accuracies).item(), np.min(test_accuracies).item(), np.mean(test_accuracies).item(), np.std(test_accuracies).item(), running_time]
+]
+
+print(final_stats_data)
+
+header = ["Max", "Min", "Average", "Standard Deviation", "OverallTime"]
+
+final_stats_data = [[float(value) if isinstance(value, np.float64) else value for value in row] for row in final_stats_data]
+results_spark_df = spark.createDataFrame(final_stats_data, header)
+
+try:
+    results_spark_df.coalesce(1).write.mode("overwrite").csv("/user/korotesvet/dt_output_fin.csv", header=True)
+except Exception as e:
+    print(str(e))
 
 
 spark.stop()
