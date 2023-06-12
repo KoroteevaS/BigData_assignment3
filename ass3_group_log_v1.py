@@ -128,13 +128,9 @@ print(final_stats_data)
 
 header = ["Max", "Min", "Average", "Standard Deviation", "OverallTime"]
 
-# Create SparkSession
-spark = SparkSession.builder.getOrCreate()
 
-# Convert numpy.float64 to float
 final_stats_data = [[float(value) if isinstance(value, np.float64) else value for value in row] for row in final_stats_data]
 
-# Create DataFrame
 results_spark_df = spark.createDataFrame(final_stats_data, header)
 
 try:
@@ -144,7 +140,6 @@ except Exception as e:
 
 
 spark.stop()
-
 
 
 
