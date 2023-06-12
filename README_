@@ -50,5 +50,13 @@ Second Part: Instructions for server cluster:
 	Note: path to your spark-bin package could be different.
  4- Install pyspark: python -m pip install pyspark==3.2.3 (your package version)
  5- Run command: source setup.csh
- 6- Put “kdd.data” dataset to hadoop cluster space: hdfs dfs -put kdd.data /user/username/
- 7- Run python file: “spark-submit –master yarn -–deploy-mode cluster script.py
+ 6- Put “kdd.data” dataset to hadoop cluster space: 
+ hdfs dfs -put kdd.data /user/username/
+ 7- For logging change paths to csv file twice in the script inserting your username into the path.
+ 8- Run python files: “spark-submit –master yarn -–deploy-mode cluster ass3_group_dt_v1.py" and "“spark-submit –master yarn -–deploy-mode cluster ass3_group_lr_v1.py"
+ 9- Access log folders dt_output_fin.csv, dt_output.csv folders for decision tree scripts and lr_output.csv, lr_output_fin.csv 
+ for logistic regression output via:
+ hdfs dfs -ls /user/username/dt_output_fin.csv 
+ and copy file started with part to you space  via :
+ hdfs dfs -get /user/username/dt_output_fin.csv/part......scv /home/username
+ 10. Overall statistic in folders ending with "_output_fin.csv". Progress in folders "_output.csv"
