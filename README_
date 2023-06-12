@@ -59,4 +59,4 @@ Second Part: Instructions for server cluster:
  hdfs dfs -ls /user/username/dt_output_fin.csv 
  and copy file started with part to you space  via :
  hdfs dfs -get /user/username/dt_output_fin.csv/part......scv /home/username
- 10. Overall statistic in folders ending with "_output_fin.csv". Progress in folders "_output.csv"
+ 10- Overall statistic in folders ending with "_output_fin.csv". Progress in folders "_output.csv"
