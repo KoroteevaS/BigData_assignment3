@@ -101,11 +101,13 @@ for i,seed in enumerate(seeds):
     run, results = lr_main(seed, run, results)
 
 header = ["Run", "Seed", "Train/Test", "Accuracy", "Running Time"]
-# results_df = spark.createDataFrame(results, schema=header)
-# res_data = results_df.collect()
-pandas_df = pd.DataFrame(results)
-pandas_df.columns = header
-pandas_df.to_csv("log_reg_running_stat.csv")
+results_df = pd.DataFrame(results, columns=header) 
+results_spark_df = spark.createDataFrame(results_df)
+try:
+    results_spark_df.coalesce(1).write.csv(r"/user/korotesvet/lr_output.csv", header=True)
+except Exception as e:
+    print(str(e))
+
 
 
 print("Training Accuracy - Max:", np.max(train_accuracies))
@@ -123,11 +125,11 @@ final_stats_data = [
 ]
 print(final_stats_data)
 header = ["Max", "Min", "Average", "Standard Deviation"]
-# final_stats_df = spark.createDataFrame(final_stats_data, schema =header)
-# final_data = final_stats_df.collect()
-pandas_fin_df = pd.DataFrame(final_stats_data)
-pandas_fin_df.columns = header
-pandas_fin_df.to_csv("log_reg_stats.csv")
+results_spark_df = spark.createDataFrame(final_stats_data)
+try:
+    results_spark_df.coalesce(1).write.csv(r"/user/korotesvet/lr_output_fin.csv", header=True)
+except Exception as e:
+    print(str(e))
 spark.stop()
 
 
