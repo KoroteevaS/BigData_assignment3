@@ -89,6 +89,8 @@ def dt_main(seed,run, results):
 
     running_time = time.time() - start_time
     print("Running Time:", running_time, "seconds")
+    results.append([i+1, seeds[i], "Train", train_accuracy, running_time])
+    results.append([i+1, seeds[i], "Test", test_accuracy, running_time])
     run = run+1
     return run, results
 
