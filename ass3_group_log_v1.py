@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 pr_start_time = time.time()
 spark = SparkSession.builder.appName("DecisionTree").getOrCreate()
-kdd = spark.read.csv("data/kdd.data")
+kdd = spark.read.csv("kdd.data")
 print(kdd)
 print(kdd.show())
 
