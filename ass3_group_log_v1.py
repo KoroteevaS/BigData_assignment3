@@ -13,7 +13,7 @@ import time
 import numpy as np
 import pandas as pd
 pr_start_time = time.time()
-spark = SparkSession.builder.appName("DecisionTree").getOrCreate()
+spark = SparkSession.builder.appName("DecisionTree").getOrCreate()csv/part-00000-6f767712-228e-4bb2-aa26-1f246cdc82c8-c000.csv
 kdd = spark.read.csv("kdd.data")
 print(kdd)
 print(kdd.show())
@@ -104,7 +104,7 @@ header = ["Run", "Seed", "Train/Test", "Accuracy", "Running Time"]
 results_df = pd.DataFrame(results, columns=header) 
 results_spark_df = spark.createDataFrame(results_df)
 try:
-    results_spark_df.coalesce(1).write.mode("overwrite").csv("/user/korotesvet/lr_output_fin.csv", header=True)
+    results_spark_df.coalesce(1).write.mode("overwrite").csv("/user/korotesvet/lr_output.csv", header=True)
 except Exception as e:
     print(str(e))
 
