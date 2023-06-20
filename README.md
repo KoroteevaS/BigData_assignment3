@@ -8,7 +8,12 @@ libraries to solve a given problem.
 Another goal of this assignment is to improve your teamwork skills such as
 organising, planning, communication, and collaboration
 
-## Files
+
+## Viz example
+
+![Individual part - lasso results](https://github.com/KoroteevaS/BigData_project/raw/main/individual/images/lasso.png)
+
+## Files and folders
 
 ass3_1-group_dectree_basic.ipynb - First basic version of decision tree model
 
@@ -17,11 +22,7 @@ ass3_1-group_logreg_basic.ipynb - First basic version of logistic regression mod
 ass3_1-group_logreg_standard.ipynb - Logistic regression model with data standardaized
 
 and corresponding .py files.
+
 /individual - contains individual project
-
-## Viz
-
-![Individual part - lasso results](https://github.com/KoroteevaS/BigData_project/raw/main/individual/images/lasso.png)
-
 
 
