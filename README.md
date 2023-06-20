@@ -21,6 +21,6 @@ and corresponding .py files.
 
 ## Viz
 
-![Individual part - lasso results]([https://github.com/KoroteevaS/BigData_project/individual/images/lasso.png](https://github.com/KoroteevaS/BigData_project/tree/main/individual/images)https://github.com/KoroteevaS/BigData_project/tree/main/individual/images/lasso.png)
+![Individual part - lasso results](https://github.com/KoroteevaS/BigData_project/tree/main/individual/images)https://github.com/KoroteevaS/BigData_project/tree/main/individual/images/lasso.png)
 
 
