@@ -21,6 +21,6 @@ and corresponding .py files.
 
 ## Viz
 
-![Individual part - lasso results](/images/lasso.png)
+![Individual part - lasso results](images/lasso.png)
 
 
