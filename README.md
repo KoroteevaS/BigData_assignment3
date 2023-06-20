@@ -7,4 +7,8 @@ ass3_1-group_logreg_basic.ipynb - First basic version of logistic regression mod
 
 ass3_1-group_logreg_standard.ipynb - Logistic regression model with data standardaized
 
+and corresponding .py files.
+
+
+
 
