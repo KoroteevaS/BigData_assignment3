@@ -1,4 +1,4 @@
-# BigData_assignment3
+# BigData_project
 ## Content
 
 ass3_1-group_dectree_basic.ipynb - First basic version of decision tree model
